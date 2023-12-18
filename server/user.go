@@ -24,7 +24,7 @@ func Login(c *gin.Context) {
 	}
 	user := db.User{}
 	result := db.DB.Model(db.User{}).Where("name = ? and password = ?", username, common.PasswordEncryption(password)).First(&user)
-	if result.RowsAffected == 0 {
+	if result.RowsAffected == 0 || result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"result": "wrong name or password"})
 		return
 	}
@@ -61,7 +61,11 @@ func Register(c *gin.Context) {
 
 	user.Name = username
 	user.Password = common.PasswordEncryption(password)
-	db.DB.Create(&user)
+	result = db.DB.Create(&user)
+	if result.Error != nil {
+		c.JSON(http.StatusServiceUnavailable, gin.H{"result": "registration failed"})
+		return
+	}
 	token, _ := common.NewJWT(0, user.Name, 0)
 	common.OKTokenSet(c, token)
 	c.JSON(http.StatusOK, gin.H{"result": "registered successfully"})
