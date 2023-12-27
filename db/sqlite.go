@@ -21,27 +21,28 @@ func DBInit() {
 		return
 	}
 	DB = db
-	common.Logln(0, "database started")
 	dbDataInit()
+	common.Logln(0, "database started")
 }
 
 // dbDataInit Initialize data from config
 func dbDataInit() {
 	// user init
-	user := User{
-		Name:     config.Config.DB.AdminName,
-		Password: common.PasswordEncryption(config.Config.DB.AdminPasswd),
-	}
-	result := DB.Take(&user)
+	username := config.Config.DB.AdminName
+	password := common.PasswordEncryption(config.Config.DB.AdminPasswd)
+	user := User{}
+	result := DB.Model(user).Where("name = ? and password = ?", username, password).First(&user)
 	if result.RowsAffected == 0 {
+		user = User{
+			Name:     username,
+			Password: password,
+		}
 		DB.Create(&user)
 	}
 
 	// boss init
-	boss := Boss{
-		ID: 1,
-	}
-	result = DB.Take(&boss)
+	boss := Boss{}
+	result = DB.Model(boss).Where("id = ?", 3).First(&boss)
 	if result.RowsAffected == 0 {
 		for i := 0; i < 5; i++ {
 			boss = Boss{

@@ -18,6 +18,8 @@ type Boss struct {
 
 type User struct {
 	gorm.Model
-	Name     string
-	Password string
+	UserID     int
+	Name       string
+	Password   string
+	Permission int
 }

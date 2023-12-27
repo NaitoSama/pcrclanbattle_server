@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/BurntSushi/toml"
+	"pcrclanbattle_server/common"
 )
 
 var Config config
@@ -12,6 +13,7 @@ func ConfigInit() {
 		panic(err)
 		return
 	}
+	common.Logln(0, "config init")
 }
 
 type config struct {

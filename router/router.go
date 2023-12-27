@@ -9,10 +9,19 @@ import (
 
 // router Add the request method and path here
 func router(r *gin.Engine) {
-	r.GET("/", func(context *gin.Context) {
-		context.String(200, "test")
-	})
-	r.GET("/ws", server.Server.HandleConnection)
+	main := r.Group("/")
+	main.Use(common.RandTokenSet)
+	{
+		v1 := main.Group("v1")
+		v1.Use(common.JWTAuthentication)
+		{
+			v1.GET("/ws", server.Server.HandleConnection)
+		}
+		main.POST("login", server.Login)
+		main.GET("test", func(context *gin.Context) {
+			context.String(200, "test")
+		})
+	}
 }
 
 // RouterInit Http server startup

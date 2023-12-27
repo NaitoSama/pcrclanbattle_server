@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
+	"pcrclanbattle_server/common"
 	"sync"
 )
 
@@ -119,4 +120,5 @@ func WSInit() {
 
 	Server = server
 	go Server.run()
+	common.Logln(0, "websocket server started")
 }
