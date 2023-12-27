@@ -11,3 +11,6 @@ INFO: 2023/12/27 11:38:11 router.go:22: http server started
 INFO: 2023/12/27 11:38:15 sqlite3.go:24: database started
 INFO: 2023/12/27 11:38:27 sqlite3.go:24: database started
 INFO: 2023/12/27 11:38:27 router.go:22: http server started
+INFO: 2023/12/27 13:43:46 sqlite3.go:24: database started
+INFO: 2023/12/27 13:45:43 sqlite3.go:24: database started
+INFO: 2023/12/27 13:45:43 router.go:22: http server started

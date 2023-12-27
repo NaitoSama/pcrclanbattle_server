@@ -17,6 +17,7 @@ func ConfigInit() {
 type config struct {
 	General general
 	DB      db
+	Boss    boss
 }
 
 type general struct {

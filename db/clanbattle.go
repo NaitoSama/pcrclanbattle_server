@@ -10,6 +10,7 @@ type Record struct {
 }
 
 type Boss struct {
+	ID    int
 	Stage int
 	Round int
 	Value int64
