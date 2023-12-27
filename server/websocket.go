@@ -126,3 +126,5 @@ func WSInit() {
 	go Server.run()
 	common.Logln(0, "websocket server started")
 }
+
+// todo informationDiversion()

@@ -10,10 +10,11 @@ type Record struct {
 }
 
 type Boss struct {
-	ID    int
-	Stage int
-	Round int
-	Value int64
+	ID      int
+	Stage   int
+	Round   int
+	Value   int64
+	WhoIsIn string
 }
 
 type User struct {

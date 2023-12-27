@@ -8,6 +8,7 @@ import (
 )
 
 var DB *gorm.DB
+var Bosses []Boss
 
 func DBInit() {
 	db, err := gorm.Open(sqlite.Open("./db/clanbattle.db"), &gorm.Config{})
@@ -56,3 +57,5 @@ func dbDataInit() {
 	}
 
 }
+
+// todo get the status of each boss to Bosses

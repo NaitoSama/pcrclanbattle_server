@@ -2,3 +2,7 @@ INFO: 2023/12/27 16:42:15 config.go:16: config init
 INFO: 2023/12/27 16:42:15 sqlite.go:25: database started
 INFO: 2023/12/27 16:42:15 websocket.go:127: websocket server started
 INFO: 2023/12/27 16:42:15 router.go:33: http server started
+INFO: 2023/12/27 17:14:29 config.go:16: config init
+INFO: 2023/12/27 17:14:29 sqlite.go:25: database started
+INFO: 2023/12/27 17:14:29 websocket.go:127: websocket server started
+INFO: 2023/12/27 17:14:29 router.go:33: http server started
