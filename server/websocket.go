@@ -70,6 +70,8 @@ func (server *WebSocketServer) HandleConnection(context *gin.Context) {
 	client := &Client{conn: conn, send: make(chan []byte, 256)}
 	server.register <- client
 
+	// todo send conn boss state content when it's first time
+
 	go client.write()
 	client.read()
 }

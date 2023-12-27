@@ -1,2 +1,20 @@
 [General]
 HttpPort = "8081"
+
+[DB]
+AdminName = "admin"
+AdminPasswd = "admin"
+
+[Boss]
+Stage = 5
+StageOne = [1,2,3,4,5]
+StageTwo = [1,2,3,4,5]
+StageThree = [1,2,3,4,5]
+StageFour = [1,2,3,4,5]
+StageFive = [1,2,3,4,5]
+StageSix = [1,2,3,4,5]
+StageOneToTwo = 5
+StageTwoToThree = 10
+StageThreeToFour = 12
+StageFourToFive = 20
+StageFiveToSix = 30
