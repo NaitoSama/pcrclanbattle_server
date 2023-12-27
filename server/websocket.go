@@ -35,21 +35,22 @@ type WebSocketServer struct {
 	unregister chan *Client     // unregister a client
 }
 
+// run start ws server
 func (server *WebSocketServer) run() {
 	for {
 		select {
-		case client := <-server.register:
+		case client := <-server.register: // a new conn
 			lock.Lock()
 			server.clients[client] = true
 			lock.Unlock()
-		case client := <-server.unregister:
+		case client := <-server.unregister: // a conn closed
 			if _, ok := server.clients[client]; ok {
 				lock.Lock()
 				delete(server.clients, client)
 				lock.Unlock()
 				close(client.send)
 			}
-		case message := <-server.broadcast:
+		case message := <-server.broadcast: // a broadcast event occurred
 			for client := range server.clients {
 				select {
 				case client.send <- message:
@@ -62,6 +63,7 @@ func (server *WebSocketServer) run() {
 	}
 }
 
+// HandleConnection upgrade http request to websocket connection
 func (server *WebSocketServer) HandleConnection(context *gin.Context) {
 	conn, err := upgrader.Upgrade(context.Writer, context.Request, nil)
 	if err != nil {
@@ -77,6 +79,7 @@ func (server *WebSocketServer) HandleConnection(context *gin.Context) {
 	client.read()
 }
 
+// read receive messages sent from user
 func (client *Client) read() {
 	defer func() {
 		client.conn.Close()
@@ -92,6 +95,7 @@ func (client *Client) read() {
 	}
 }
 
+// write send message to user
 func (client *Client) write() {
 	defer func() {
 		client.conn.Close()

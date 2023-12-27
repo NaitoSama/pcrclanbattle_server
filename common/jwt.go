@@ -27,7 +27,7 @@ func RandTokenSet(c *gin.Context) {
 	}
 }
 
-// JWTAuthentication
+// JWTAuthentication this middleware will verify user token
 func JWTAuthentication(c *gin.Context) {
 	token, err := c.Cookie("pekoToken")
 	if err != nil {
@@ -57,7 +57,7 @@ type MyClaims struct {
 	jwt.StandardClaims
 }
 
-// NewJWT
+// NewJWT generate a new token
 func NewJWT(userID int, username string, userAuthority int) (string, error) {
 	claims := MyClaims{
 		UserID:        userID,
@@ -78,7 +78,7 @@ func NewJWT(userID int, username string, userAuthority int) (string, error) {
 	return tokenString, nil
 }
 
-// ParseJWT 解析JWT
+// ParseJWT parse a token to userinfo
 func ParseJWT(token string) (int, string, int, bool) {
 	parseToken, err := jwt.ParseWithClaims(token, &MyClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
@@ -93,7 +93,7 @@ func ParseJWT(token string) (int, string, int, bool) {
 	return userID, username, userAuthority, true
 }
 
-// OKTokenSet 登录后setcookie操作
+// OKTokenSet set user cookie
 func OKTokenSet(c *gin.Context, token string) {
 	c.SetCookie(
 		"pekoToken",

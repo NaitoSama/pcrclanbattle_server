@@ -18,6 +18,7 @@ func router(r *gin.Engine) {
 			v1.GET("/ws", server.Server.HandleConnection)
 		}
 		main.POST("login", server.Login)
+		main.POST("register", server.Register)
 		main.GET("test", func(context *gin.Context) {
 			context.String(200, "test")
 		})
