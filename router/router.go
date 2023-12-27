@@ -27,9 +27,11 @@ func router(r *gin.Engine) {
 
 // RouterInit Http server startup
 func RouterInit() {
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
 	router(r)
 	common.Logln(0, "http server started")
+	println("Server started on \"IPv4 OR IPv6:" + config.Config.General.HttpPort + "\"!")
 	err := r.Run(":" + config.Config.General.HttpPort)
 	if err != nil {
 		common.ErrorHandle(err)
