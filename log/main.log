@@ -106,3 +106,95 @@ INFO: 2023/12/28 16:49:04 config.go:16: config init
 INFO: 2023/12/28 16:49:04 sqlite.go:33: database started
 INFO: 2023/12/28 16:49:04 websocket.go:134: websocket server started
 INFO: 2023/12/28 16:49:04 router.go:33: http server started
+INFO: 2023/12/28 22:07:50 config.go:16: config init
+INFO: 2023/12/28 22:07:50 sqlite.go:33: database started
+INFO: 2023/12/28 22:07:50 websocket.go:134: websocket server started
+INFO: 2023/12/28 22:07:50 router.go:33: http server started
+INFO: 2023/12/28 22:31:01 config.go:16: config init
+INFO: 2023/12/28 22:31:01 sqlite.go:33: database started
+INFO: 2023/12/28 22:31:01 websocket.go:134: websocket server started
+INFO: 2023/12/28 22:31:01 router.go:33: http server started
+INFO: 2023/12/28 22:34:20 config.go:16: config init
+INFO: 2023/12/28 22:34:20 sqlite.go:33: database started
+INFO: 2023/12/28 22:34:20 websocket.go:134: websocket server started
+INFO: 2023/12/28 22:34:20 router.go:33: http server started
+INFO: 2023/12/28 22:35:33 config.go:16: config init
+INFO: 2023/12/28 22:35:33 sqlite.go:33: database started
+INFO: 2023/12/28 22:35:33 websocket.go:134: websocket server started
+INFO: 2023/12/28 22:35:33 router.go:33: http server started
+INFO: 2023/12/28 22:37:14 config.go:16: config init
+INFO: 2023/12/28 22:37:14 sqlite.go:33: database started
+INFO: 2023/12/28 22:37:14 websocket.go:134: websocket server started
+INFO: 2023/12/28 22:37:14 router.go:33: http server started
+INFO: 2023/12/28 22:39:27 config.go:16: config init
+INFO: 2023/12/28 22:39:27 sqlite.go:33: database started
+INFO: 2023/12/28 22:39:27 websocket.go:135: websocket server started
+INFO: 2023/12/28 22:39:27 router.go:33: http server started
+INFO: 2023/12/28 22:40:29 config.go:16: config init
+INFO: 2023/12/28 22:40:29 sqlite.go:33: database started
+INFO: 2023/12/28 22:40:29 websocket.go:136: websocket server started
+INFO: 2023/12/28 22:40:29 router.go:33: http server started
+INFO: 2023/12/28 22:57:32 config.go:16: config init
+INFO: 2023/12/28 22:57:32 sqlite.go:33: database started
+INFO: 2023/12/28 22:57:32 websocket.go:134: websocket server started
+INFO: 2023/12/28 22:57:32 router.go:33: http server started
+INFO: 2023/12/28 23:00:36 config.go:16: config init
+INFO: 2023/12/28 23:00:36 sqlite.go:33: database started
+INFO: 2023/12/28 23:00:36 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:00:36 router.go:33: http server started
+INFO: 2023/12/28 23:03:13 config.go:16: config init
+INFO: 2023/12/28 23:03:13 sqlite.go:33: database started
+INFO: 2023/12/28 23:03:13 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:03:13 router.go:33: http server started
+INFO: 2023/12/28 23:04:29 config.go:16: config init
+INFO: 2023/12/28 23:04:29 sqlite.go:33: database started
+INFO: 2023/12/28 23:04:29 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:04:29 router.go:33: http server started
+INFO: 2023/12/28 23:06:38 config.go:16: config init
+INFO: 2023/12/28 23:06:38 sqlite.go:33: database started
+INFO: 2023/12/28 23:06:38 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:06:38 router.go:33: http server started
+INFO: 2023/12/28 23:09:02 config.go:16: config init
+INFO: 2023/12/28 23:09:02 sqlite.go:33: database started
+INFO: 2023/12/28 23:09:02 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:09:02 router.go:33: http server started
+INFO: 2023/12/28 23:09:58 config.go:16: config init
+INFO: 2023/12/28 23:09:58 sqlite.go:33: database started
+INFO: 2023/12/28 23:09:58 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:09:58 router.go:33: http server started
+INFO: 2023/12/28 23:10:57 config.go:16: config init
+INFO: 2023/12/28 23:10:57 sqlite.go:33: database started
+INFO: 2023/12/28 23:10:57 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:10:57 router.go:33: http server started
+INFO: 2023/12/28 23:15:10 config.go:16: config init
+INFO: 2023/12/28 23:15:10 sqlite.go:33: database started
+INFO: 2023/12/28 23:15:10 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:15:10 router.go:33: http server started
+INFO: 2023/12/28 23:15:53 config.go:16: config init
+INFO: 2023/12/28 23:15:53 sqlite.go:33: database started
+INFO: 2023/12/28 23:15:53 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:15:53 router.go:33: http server started
+INFO: 2023/12/28 23:17:21 config.go:16: config init
+INFO: 2023/12/28 23:17:21 sqlite.go:33: database started
+INFO: 2023/12/28 23:17:21 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:17:21 router.go:33: http server started
+INFO: 2023/12/28 23:18:43 config.go:16: config init
+INFO: 2023/12/28 23:18:43 sqlite.go:33: database started
+INFO: 2023/12/28 23:18:43 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:18:43 router.go:33: http server started
+INFO: 2023/12/28 23:20:59 config.go:16: config init
+INFO: 2023/12/28 23:20:59 sqlite.go:33: database started
+INFO: 2023/12/28 23:20:59 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:20:59 router.go:33: http server started
+INFO: 2023/12/28 23:22:11 config.go:16: config init
+INFO: 2023/12/28 23:22:11 sqlite.go:33: database started
+INFO: 2023/12/28 23:22:11 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:22:11 router.go:33: http server started
+INFO: 2023/12/28 23:23:07 config.go:16: config init
+INFO: 2023/12/28 23:23:07 sqlite.go:33: database started
+INFO: 2023/12/28 23:23:07 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:23:07 router.go:33: http server started
+INFO: 2023/12/28 23:25:57 config.go:16: config init
+INFO: 2023/12/28 23:25:57 sqlite.go:33: database started
+INFO: 2023/12/28 23:25:57 websocket.go:134: websocket server started
+INFO: 2023/12/28 23:25:57 router.go:33: http server started
