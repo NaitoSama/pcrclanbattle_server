@@ -34,7 +34,7 @@ func AttackBoss(message []byte) error {
 	if err != nil {
 		return err
 	}
-
+	lock.Lock()
 	for i := 0; i < len(db.Cache.Bosses); i++ {
 		if db.Cache.Bosses[i].ID == data.BossID {
 			// defeat or damage boss
@@ -52,12 +52,12 @@ func AttackBoss(message []byte) error {
 				bossNewRound = db.Cache.Bosses[i].Round
 				bossNewValue = db.Cache.Bosses[i].Value - data.Value
 			}
-			lock.Lock()
 			db.Cache.Bosses[i].Round = bossNewRound
 			db.Cache.Bosses[i].Value = bossNewValue
-			lock.Unlock()
+			break
 		}
 	}
+	lock.Unlock()
 
 	// renew database bosses and records
 	// broadcast
