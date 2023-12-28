@@ -1,5 +1,6 @@
 [General]
 HttpPort = "8081"
+RegisterCode = "peko"
 
 [DB]
 AdminName = "admin"

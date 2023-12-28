@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"pcrclanbattle_server/common"
+	"pcrclanbattle_server/config"
 	"pcrclanbattle_server/db"
 )
 
@@ -41,9 +42,14 @@ func Register(c *gin.Context) {
 	}
 	username, usernameExists := json["username"]
 	password, passwordExists := json["password"]
+	registerCode, registerCodeExists := json["register_code"]
 
-	if !usernameExists || !passwordExists {
+	if !usernameExists || !passwordExists || !registerCodeExists {
 		c.JSON(http.StatusBadRequest, gin.H{"result": "Invalid JSON structure"})
+		return
+	}
+	if registerCode != config.Config.General.RegisterCode {
+		c.JSON(http.StatusBadRequest, gin.H{"result": "invalid register code"})
 		return
 	}
 	user := db.User{}

@@ -8,7 +8,13 @@ import (
 )
 
 var DB *gorm.DB
-var Bosses []Boss
+
+type cache struct {
+	Bosses  []Boss
+	Records []Record
+}
+
+var Cache = &cache{}
 
 func DBInit() {
 	db, err := gorm.Open(sqlite.Open("./db/clanbattle.db"), &gorm.Config{})
@@ -23,6 +29,7 @@ func DBInit() {
 	}
 	DB = db
 	dbDataInit()
+	dbCacheInit()
 	common.Logln(0, "database started")
 }
 
@@ -55,7 +62,11 @@ func dbDataInit() {
 			DB.Create(&boss)
 		}
 	}
-
 }
 
-// todo get the status of each boss to Bosses
+func dbCacheInit() {
+	// boss cache init
+	DB.Model(Boss{}).Find(&Cache.Bosses)
+	// record cache init
+	DB.Model(Record{}).Find(&Cache.Records)
+}

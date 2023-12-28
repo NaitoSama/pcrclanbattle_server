@@ -23,7 +23,8 @@ type config struct {
 }
 
 type general struct {
-	HttpPort string
+	HttpPort     string
+	RegisterCode string
 }
 
 type db struct {

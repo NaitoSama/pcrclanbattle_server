@@ -1,11 +1,14 @@
 package server
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"net/http"
 	"pcrclanbattle_server/common"
+	"pcrclanbattle_server/db"
 	"sync"
 )
 
@@ -73,7 +76,11 @@ func (server *WebSocketServer) HandleConnection(context *gin.Context) {
 	client := &Client{conn: conn, send: make(chan []byte, 256)}
 	server.register <- client
 
-	// todo send conn boss state content when it's first time
+	// send conn boss state data when it's first time
+	lock.RLock()
+	data, _ := json.Marshal(db.Cache.Bosses)
+	lock.RUnlock()
+	client.send <- data
 
 	go client.write()
 	client.read()
@@ -90,8 +97,8 @@ func (client *Client) read() {
 		if err != nil {
 			break
 		}
-		// todo handle the content from ws client
-		Server.broadcast <- message
+		// handle the content from ws client
+		informationDiversion(message)
 	}
 }
 
@@ -127,4 +134,24 @@ func WSInit() {
 	common.Logln(0, "websocket server started")
 }
 
-// todo informationDiversion()
+func informationDiversion(message []byte) error {
+	data := make(map[string]string)
+	err := json.Unmarshal(message, &data)
+	if err != nil {
+		return err
+	}
+	switch data["type"] {
+	case "attack":
+		return nil
+	case "revise":
+		return nil
+	case "undo":
+		return nil
+	case "imin":
+		return nil
+	case "imout":
+		return nil
+	default:
+		return errors.New("need type")
+	}
+}
