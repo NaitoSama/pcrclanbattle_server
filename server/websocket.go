@@ -136,12 +136,13 @@ func WSInit() {
 
 func informationDiversion(message []byte) error {
 	data := make(map[string]string)
-	err := json.Unmarshal(message, &data)
-	if err != nil {
-		return err
-	}
+	json.Unmarshal(message, &data)
+	//if err != nil {
+	//	return err
+	//}
 	switch data["type"] {
 	case "attack":
+		AttackBoss(message)
 		return nil
 	case "revise":
 		return nil
