@@ -59,7 +59,9 @@ func (server *WebSocketServer) run() {
 				case client.send <- message:
 				default:
 					close(client.send)
+					lock.Lock()
 					delete(server.clients, client)
+					lock.Unlock()
 				}
 			}
 		}
