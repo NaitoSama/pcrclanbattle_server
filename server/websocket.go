@@ -73,7 +73,7 @@ func (server *WebSocketServer) HandleConnection(context *gin.Context) {
 		fmt.Println(err)
 		return
 	}
-	client := &Client{conn: conn, send: make(chan []byte, 256)}
+	client := &Client{conn: conn, send: make(chan []byte, 8)}
 	server.register <- client
 
 	// send conn boss state data when it's first time
@@ -98,7 +98,11 @@ func (client *Client) read() {
 			break
 		}
 		// handle the content from ws client
-		informationDiversion(message)
+		err = informationDiversion(message)
+		if err != nil {
+			feedback, _ := json.Marshal(gin.H{"result": err.Error()})
+			client.send <- []byte(feedback)
+		}
 	}
 }
 
@@ -140,9 +144,25 @@ func informationDiversion(message []byte) error {
 	//if err != nil {
 	//	return err
 	//}
-	switch data["type"] {
+	dataType, ok := data["type"]
+	if !ok {
+		return errors.New("need type")
+	}
+	token, ok := data["token"]
+	if !ok {
+		return errors.New("need token")
+	}
+	user := common.MyClaims{}
+	user.UserID, user.UserName, user.UserAuthority, ok = common.ParseJWT(token)
+	if !ok {
+		return errors.New("permission denied")
+	}
+	switch dataType {
 	case "attack":
-		AttackBoss(message)
+		err := AttackBoss(message, user.UserName)
+		if err != nil {
+			return err
+		}
 		return nil
 	case "revise":
 		return nil
@@ -153,6 +173,6 @@ func informationDiversion(message []byte) error {
 	case "imout":
 		return nil
 	default:
-		return errors.New("need type")
+		return errors.New("unknown type")
 	}
 }

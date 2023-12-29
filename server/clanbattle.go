@@ -2,8 +2,10 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"gorm.io/gorm"
+	"pcrclanbattle_server/common"
 	"pcrclanbattle_server/config"
 	"pcrclanbattle_server/db"
 	"pcrclanbattle_server/model"
@@ -29,7 +31,7 @@ func bossDefaultValue(bossID int, round int) (int, int64) {
 	return -1, -1
 }
 
-func AttackBoss(message []byte) error {
+func AttackBoss(message []byte, name string) error {
 	var bossNewStage int
 	var bossNewRound int
 	var bossNewValue int64
@@ -65,6 +67,9 @@ func AttackBoss(message []byte) error {
 		}
 	}
 	lock.RUnlock()
+	if bossNewValue == 0 && bossNewStage == 0 && bossNewRound == 0 {
+		return errors.New("invalid boss_id")
+	}
 
 	// renew database bosses and records
 	result := db.DB.Model(db.Boss{}).Where("id = ?", data.BossID).Updates(db.Boss{
@@ -82,9 +87,9 @@ func AttackBoss(message []byte) error {
 			CreatedAt: timeNow,
 			UpdatedAt: timeNow,
 		},
-		AttackFrom: data.FromName,
+		AttackFrom: name,
 		AttackTo:   fmt.Sprintf("%d,%d,%d,%d", data.BossID, beforeAttackBoss.Stage, beforeAttackBoss.Round, beforeAttackBoss.Value),
-		Damage:     data.Value,
+		Damage:     common.If(data.Type == 1, beforeAttackBoss.Value, data.Value).(int64),
 	}
 	result = db.DB.Model(db.Record{}).Create(&record)
 	if result.Error != nil {
@@ -98,5 +103,5 @@ func AttackBoss(message []byte) error {
 	db.Cache.Records = append(db.Cache.Records, record)
 	lock.Unlock()
 	// broadcast
-	return nil
+	return errors.New("ok")
 }
