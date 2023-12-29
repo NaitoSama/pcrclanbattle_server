@@ -7,6 +7,7 @@ type Record struct {
 	AttackFrom string
 	AttackTo   string
 	Damage     int64
+	CanUndo    int
 }
 
 type Boss struct {
@@ -15,6 +16,7 @@ type Boss struct {
 	Round   int
 	Value   int64
 	WhoIsIn string
+	Tree    string
 }
 
 type User struct {

@@ -94,6 +94,12 @@ func AttackBoss(message []byte, name string) error {
 	newBoss.Round = bossNewRound
 	newBoss.Stage = bossNewStage
 	newBoss.Value = bossNewValue
+	if data.AType == 1 {
+		newBoss.WhoIsIn = " "
+		newBoss.Tree = " "
+	} else if name == newBoss.WhoIsIn {
+		newBoss.WhoIsIn = " "
+	}
 	err = renewBoss(newBoss)
 	if err != nil {
 		return err
@@ -117,3 +123,12 @@ func AttackBoss(message []byte, name string) error {
 	db.Cache.Records = append(db.Cache.Records, record)
 	return errors.New("ok")
 }
+
+//func ReviseBoss(message []byte) error {
+//	data := model.RevisePayload{}
+//	err := json.Unmarshal(message, &data)
+//	if err != nil {
+//		return err
+//	}
+//
+//}
