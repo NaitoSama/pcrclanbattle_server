@@ -39,8 +39,6 @@ func renewBoss(renewBoss db.Boss) error {
 	}
 
 	// renew cache
-	lock.Lock()
-	defer lock.Unlock()
 	db.Cache.Bosses[renewBoss.ID-1] = renewBoss
 	// broadcast
 	broadcastData, _ := json.Marshal(renewBoss)
@@ -49,6 +47,8 @@ func renewBoss(renewBoss db.Boss) error {
 }
 
 func AttackBoss(message []byte, name string) error {
+	lock.Lock()
+	defer lock.Unlock()
 	var bossNewStage int
 	var bossNewRound int
 	var bossNewValue int64
@@ -61,7 +61,6 @@ func AttackBoss(message []byte, name string) error {
 	if data.Value < 0 {
 		return errors.New("invalid value")
 	}
-	lock.RLock()
 	// boss info after attacking
 	for i := 0; i < len(db.Cache.Bosses); i++ {
 		if db.Cache.Bosses[i].ID == data.BossID {
@@ -86,7 +85,6 @@ func AttackBoss(message []byte, name string) error {
 			break
 		}
 	}
-	lock.RUnlock()
 	if bossNewValue == 0 && bossNewStage == 0 && bossNewRound == 0 {
 		return errors.New("invalid boss_id")
 	}
@@ -116,8 +114,6 @@ func AttackBoss(message []byte, name string) error {
 		return result.Error
 	}
 	// renew cache
-	lock.Lock()
-	defer lock.Unlock()
 	db.Cache.Records = append(db.Cache.Records, record)
 	return errors.New("ok")
 }
