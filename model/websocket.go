@@ -4,7 +4,7 @@ package model
 
 // type:attack
 type AttackBoss struct {
-	Type     int    `json:"type"` // 0-damage 1-defeat
+	AType    int    `json:"a_type"` // 0-damage 1-defeat
 	BossID   int    `json:"boss_id"`
 	Value    int64  `json:"value"`     // damage value
 	FromName string `json:"from_name"` // who caused

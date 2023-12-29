@@ -31,6 +31,23 @@ func bossDefaultValue(bossID int, round int) (int, int64) {
 	return -1, -1
 }
 
+func renewBoss(renewBoss db.Boss) error {
+	// renew database bosses
+	result := db.DB.Model(db.Boss{}).Where("id = ?", renewBoss.ID).Updates(renewBoss)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	// renew cache
+	lock.Lock()
+	defer lock.Unlock()
+	db.Cache.Bosses[renewBoss.ID-1] = renewBoss
+	// broadcast
+	broadcastData, _ := json.Marshal(renewBoss)
+	Server.broadcast <- broadcastData
+	return nil
+}
+
 func AttackBoss(message []byte, name string) error {
 	var bossNewStage int
 	var bossNewRound int
@@ -41,6 +58,9 @@ func AttackBoss(message []byte, name string) error {
 	if err != nil {
 		return err
 	}
+	if data.Value < 0 {
+		return errors.New("invalid value")
+	}
 	lock.RLock()
 	// boss info after attacking
 	for i := 0; i < len(db.Cache.Bosses); i++ {
@@ -48,12 +68,12 @@ func AttackBoss(message []byte, name string) error {
 			beforeAttackBoss = db.Cache.Bosses[i]
 			// defeat or damage boss
 			if data.Value >= db.Cache.Bosses[i].Value {
-				data.Type = 1
+				data.AType = 1
 			} else {
-				data.Type = 0
+				data.AType = 0
 			}
 
-			if data.Type == 1 {
+			if data.AType == 1 {
 				// defeat boss
 				bossNewRound = db.Cache.Bosses[i].Round + 1
 				bossNewStage, bossNewValue = bossDefaultValue(db.Cache.Bosses[i].ID, bossNewRound)
@@ -72,13 +92,13 @@ func AttackBoss(message []byte, name string) error {
 	}
 
 	// renew database bosses and records
-	result := db.DB.Model(db.Boss{}).Where("id = ?", data.BossID).Updates(db.Boss{
-		Stage: bossNewStage,
-		Round: bossNewRound,
-		Value: bossNewValue,
-	})
-	if result.Error != nil {
-		return result.Error
+	newBoss := beforeAttackBoss
+	newBoss.Round = bossNewRound
+	newBoss.Stage = bossNewStage
+	newBoss.Value = bossNewValue
+	err = renewBoss(newBoss)
+	if err != nil {
+		return err
 	}
 
 	timeNow := time.Now()
@@ -89,19 +109,15 @@ func AttackBoss(message []byte, name string) error {
 		},
 		AttackFrom: name,
 		AttackTo:   fmt.Sprintf("%d,%d,%d,%d", data.BossID, beforeAttackBoss.Stage, beforeAttackBoss.Round, beforeAttackBoss.Value),
-		Damage:     common.If(data.Type == 1, beforeAttackBoss.Value, data.Value).(int64),
+		Damage:     common.If(data.AType == 1, beforeAttackBoss.Value, data.Value).(int64),
 	}
-	result = db.DB.Model(db.Record{}).Create(&record)
+	result := db.DB.Model(db.Record{}).Create(&record)
 	if result.Error != nil {
 		return result.Error
 	}
 	// renew cache
 	lock.Lock()
-	db.Cache.Bosses[data.BossID-1].Value = bossNewValue
-	db.Cache.Bosses[data.BossID-1].Round = bossNewRound
-	db.Cache.Bosses[data.BossID-1].Stage = bossNewStage
+	defer lock.Unlock()
 	db.Cache.Records = append(db.Cache.Records, record)
-	lock.Unlock()
-	// broadcast
 	return errors.New("ok")
 }
