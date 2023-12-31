@@ -14,3 +14,6 @@ StageFour = [1000,2000,3000,4000,5000]
 StageFive = [10000,20000,30000,40000,50000]
 StageSix = [100000,200000,300000,400000,500000]
 StageSwitchRound = [5,10,14,20,24]
+
+[ClanBattle]
+CanBeUndoRecordsUP = 10 # the latest number of records that can be undone

@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"gorm.io/gorm"
 	"pcrclanbattle_server/common"
 	"pcrclanbattle_server/config"
@@ -31,6 +30,7 @@ func bossDefaultValue(bossID int, round int) (int, int64) {
 	return -1, -1
 }
 
+// renewBoss thread is not safe
 func renewBoss(renewBoss db.Boss) error {
 	// renew database bosses
 	result := db.DB.Model(db.Boss{}).Where("id = ?", renewBoss.ID).Updates(renewBoss)
@@ -46,6 +46,24 @@ func renewBoss(renewBoss db.Boss) error {
 	return nil
 }
 
+//// parseBossStatus will return a boss status with default
+//func parseBossStatus(bossStatusStr string) db.Boss {
+//	data := strings.Split(bossStatusStr, "|")
+//	bossID, _ := strconv.Atoi(data[0])
+//	stage, _ := strconv.Atoi(data[1])
+//	round, _ := strconv.Atoi(data[2])
+//	value, _ := strconv.ParseInt(data[3], 10, 64)
+//	boss := db.Boss{
+//		ID:      bossID,
+//		Stage:   stage,
+//		Round:   round,
+//		Value:   value,
+//		WhoIsIn: " ",
+//	}
+//	return boss
+//}
+
+// AttackBoss need attacker name
 func AttackBoss(message []byte, name string) error {
 	lock.Lock()
 	defer lock.Unlock()
@@ -111,9 +129,14 @@ func AttackBoss(message []byte, name string) error {
 			CreatedAt: timeNow,
 			UpdatedAt: timeNow,
 		},
-		AttackFrom: name,
-		AttackTo:   fmt.Sprintf("%d,%d,%d,%d", data.BossID, beforeAttackBoss.Stage, beforeAttackBoss.Round, beforeAttackBoss.Value),
-		Damage:     common.If(data.AType == 1, beforeAttackBoss.Value, data.Value).(int64),
+		AttackFrom:        name,
+		AttackTo:          beforeAttackBoss.ID,
+		Damage:            common.If(data.AType == 1, beforeAttackBoss.Value, data.Value).(int64),
+		BeforeBossStage:   beforeAttackBoss.Stage,
+		BeforeBossRound:   beforeAttackBoss.Round,
+		BeforeBossValue:   beforeAttackBoss.Value,
+		BeforeBossWhoIsIn: beforeAttackBoss.WhoIsIn,
+		BeforeBossTree:    beforeAttackBoss.Tree,
 	}
 	result := db.DB.Model(db.Record{}).Create(&record)
 	if result.Error != nil {
@@ -124,11 +147,78 @@ func AttackBoss(message []byte, name string) error {
 	return errors.New("ok")
 }
 
-//func ReviseBoss(message []byte) error {
-//	data := model.RevisePayload{}
-//	err := json.Unmarshal(message, &data)
-//	if err != nil {
-//		return err
-//	}
-//
-//}
+// ReviseBoss by sending boss_id and round and value
+func ReviseBoss(message []byte) error {
+	lock.Lock()
+	defer lock.Unlock()
+	data := model.RevisePayload{}
+	err := json.Unmarshal(message, &data)
+	if err != nil {
+		return err
+	}
+	bossNewStage, bossNewDefaultValue := bossDefaultValue(data.BossID, data.Round)
+	newBoss := db.Boss{
+		ID:      data.BossID,
+		Stage:   bossNewStage,
+		Round:   data.Round,
+		Value:   common.If(data.Value > bossNewDefaultValue, bossNewDefaultValue, data.Value).(int64),
+		WhoIsIn: " ",
+		Tree:    " ",
+	}
+	err = renewBoss(newBoss)
+	if err != nil {
+		return err
+	}
+	return errors.New("ok")
+}
+
+func Undo(message []byte, name string) error {
+	lock.Lock()
+	defer lock.Unlock()
+	var bossStatus db.Boss // it is the state of the boss we want to have after undo the attack
+	var bossStatusDataIndex int
+	var findBossStatus bool
+
+	data := model.UndoPayload{}
+	err := json.Unmarshal(message, &data)
+	if err != nil {
+		return err
+	}
+	recordsLen := len(db.Cache.Records)
+	round := config.Config.ClanBattle.CanBeUndoRecordsUP
+
+	for i := recordsLen - 1; i >= 0; i-- {
+		round--
+		if data.BossID == db.Cache.Records[i].AttackTo {
+			if name == db.Cache.Records[i].AttackFrom {
+				bossStatus = db.Boss{
+					ID:      db.Cache.Records[i].AttackTo,
+					Stage:   db.Cache.Records[i].BeforeBossStage,
+					Round:   db.Cache.Records[i].BeforeBossRound,
+					Value:   db.Cache.Records[i].BeforeBossValue,
+					WhoIsIn: db.Cache.Records[i].BeforeBossWhoIsIn,
+					Tree:    db.Cache.Records[i].BeforeBossTree,
+				}
+				bossStatusDataIndex = i
+				findBossStatus = true
+				break
+			} else {
+				return errors.New("can not undo, because someone has attacked the boss")
+			}
+		}
+		if round <= 0 {
+			return errors.New("can not find " + name + "'s record in the latest records")
+		}
+	}
+	if !findBossStatus {
+		return errors.New(name + " has no record")
+	}
+
+	err = renewBoss(bossStatus)
+	if err != nil {
+		return err
+	}
+	// renew cache
+	db.Cache.Records = append(db.Cache.Records[:bossStatusDataIndex], db.Cache.Records[bossStatusDataIndex+1:]...)
+	return errors.New("ok")
+}

@@ -167,8 +167,20 @@ func informationDiversion(message []byte) error {
 		}
 		return nil
 	case "revise":
+		// authentication (default admin account is 2)
+		if user.UserAuthority < 1 {
+			return errors.New("insufficient permissions")
+		}
+		err := ReviseBoss(message)
+		if err != nil {
+			return err
+		}
 		return nil
 	case "undo":
+		err := Undo(message, user.UserName)
+		if err != nil {
+			return err
+		}
 		return nil
 	case "imin":
 		return nil

@@ -17,9 +17,10 @@ func ConfigInit() {
 }
 
 type config struct {
-	General general
-	DB      db
-	Boss    boss
+	General    general
+	DB         db
+	Boss       boss
+	ClanBattle clanBattle
 }
 
 type general struct {
@@ -40,4 +41,8 @@ type boss struct {
 	StageFive        []int64
 	StageSix         []int64
 	StageSwitchRound []int
+}
+
+type clanBattle struct {
+	CanBeUndoRecordsUP int
 }

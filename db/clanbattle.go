@@ -4,10 +4,15 @@ import "gorm.io/gorm"
 
 type Record struct {
 	gorm.Model
-	AttackFrom string
-	AttackTo   string
-	Damage     int64
-	CanUndo    int
+	AttackFrom        string
+	AttackTo          int
+	Damage            int64
+	CanUndo           int
+	BeforeBossStage   int
+	BeforeBossRound   int
+	BeforeBossValue   int64
+	BeforeBossWhoIsIn string
+	BeforeBossTree    string
 }
 
 type Boss struct {

@@ -42,8 +42,9 @@ func dbDataInit() {
 	result := DB.Model(user).Where("name = ? and password = ?", username, password).First(&user)
 	if result.RowsAffected == 0 {
 		user = User{
-			Name:     username,
-			Password: password,
+			Name:       username,
+			Password:   password,
+			Permission: 2,
 		}
 		DB.Create(&user)
 	}
