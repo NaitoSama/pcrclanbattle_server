@@ -55,10 +55,12 @@ func dbDataInit() {
 	if result.RowsAffected == 0 {
 		for i := 0; i < 5; i++ {
 			boss = Boss{
-				ID:    i + 1,
-				Stage: 1,
-				Round: 1,
-				Value: config.Config.Boss.StageOne[i],
+				ID:      i + 1,
+				Stage:   1,
+				Round:   1,
+				Value:   config.Config.Boss.StageOne[i],
+				WhoIsIn: " ",
+				Tree:    " ",
 			}
 			DB.Create(&boss)
 		}

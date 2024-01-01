@@ -165,7 +165,7 @@ func informationDiversion(message []byte) error {
 		if err != nil {
 			return err
 		}
-		return nil
+		break
 	case "revise":
 		// authentication (default admin account is 2)
 		if user.UserAuthority < 1 {
@@ -175,18 +175,39 @@ func informationDiversion(message []byte) error {
 		if err != nil {
 			return err
 		}
-		return nil
+		break
 	case "undo":
 		err := Undo(message, user.UserName)
 		if err != nil {
 			return err
 		}
-		return nil
+		break
 	case "imin":
-		return nil
+		err := ImIn(message, user.UserName)
+		if err != nil {
+			return err
+		}
+		break
 	case "imout":
-		return nil
+		err := ImOut(message, user.UserName)
+		if err != nil {
+			return err
+		}
+		break
+	case "ontree":
+		err := OnTree(message, user.UserName)
+		if err != nil {
+			return err
+		}
+		break
+	case "downtree":
+		err := DownTree(message, user.UserName)
+		if err != nil {
+			return err
+		}
+		break
 	default:
 		return errors.New("unknown type")
 	}
+	return nil
 }

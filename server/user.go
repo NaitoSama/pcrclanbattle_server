@@ -6,6 +6,7 @@ import (
 	"pcrclanbattle_server/common"
 	"pcrclanbattle_server/config"
 	"pcrclanbattle_server/db"
+	"strings"
 )
 
 func Login(c *gin.Context) {
@@ -46,6 +47,14 @@ func Register(c *gin.Context) {
 
 	if !usernameExists || !passwordExists || !registerCodeExists {
 		c.JSON(http.StatusBadRequest, gin.H{"result": "Invalid JSON structure"})
+		return
+	}
+	if username == " " {
+		c.JSON(http.StatusBadRequest, gin.H{"result": "username can not be blank"})
+		return
+	}
+	if strings.Contains(username, "|") {
+		c.JSON(http.StatusBadRequest, gin.H{"result": "username can not contains \"|\""})
 		return
 	}
 	if registerCode != config.Config.General.RegisterCode {

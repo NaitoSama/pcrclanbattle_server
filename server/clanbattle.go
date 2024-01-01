@@ -8,6 +8,7 @@ import (
 	"pcrclanbattle_server/config"
 	"pcrclanbattle_server/db"
 	"pcrclanbattle_server/model"
+	"strings"
 	"time"
 )
 
@@ -220,5 +221,110 @@ func Undo(message []byte, name string) error {
 	}
 	// renew cache
 	db.Cache.Records = append(db.Cache.Records[:bossStatusDataIndex], db.Cache.Records[bossStatusDataIndex+1:]...)
+	return errors.New("ok")
+}
+
+func ImIn(message []byte, name string) error {
+	lock.Lock()
+	defer lock.Unlock()
+	data := model.ImInPayload{}
+	err := json.Unmarshal(message, &data)
+	if err != nil {
+		return err
+	}
+
+	newBoss := db.Cache.Bosses[data.BossID-1]
+	if newBoss.WhoIsIn != name && newBoss.WhoIsIn != " " {
+		return errors.New("someone is attacking the boss")
+	}
+	if newBoss.WhoIsIn == name {
+		return errors.New("you are in boss now")
+	}
+
+	newBoss.WhoIsIn = name
+	err = renewBoss(newBoss)
+	if err != nil {
+		return err
+	}
+	return errors.New("ok")
+}
+
+func ImOut(message []byte, name string) error {
+	lock.Lock()
+	defer lock.Unlock()
+	data := model.ImOutPayload{}
+	err := json.Unmarshal(message, &data)
+	if err != nil {
+		return err
+	}
+
+	newBoss := db.Cache.Bosses[data.BossID-1]
+	if newBoss.WhoIsIn != name {
+		return errors.New("you are not in boss now")
+	}
+
+	newBoss.WhoIsIn = " "
+	err = renewBoss(newBoss)
+	if err != nil {
+		return err
+	}
+	return errors.New("ok")
+}
+
+func OnTree(message []byte, name string) error {
+	lock.Lock()
+	defer lock.Unlock()
+	data := model.OnTreePayload{}
+	err := json.Unmarshal(message, &data)
+	if err != nil {
+		return err
+	}
+
+	newBoss := db.Cache.Bosses[data.BossID-1]
+	// if tree has somebody on it
+	if newBoss.Tree != " " {
+		treeArray := strings.Split(newBoss.Tree, "|")
+		_, findResult := common.SliceFind(treeArray, name)
+		if findResult {
+			return errors.New("you are already on tree")
+		}
+		newBoss.Tree += "|" + name
+	} else { // there is nobody on tree
+		newBoss.Tree = name
+	}
+	err = renewBoss(newBoss)
+	if err != nil {
+		return err
+	}
+	return errors.New("ok")
+}
+
+func DownTree(message []byte, name string) error {
+	lock.Lock()
+	defer lock.Unlock()
+	data := model.DownTreePayload{}
+	err := json.Unmarshal(message, &data)
+	if err != nil {
+		return err
+	}
+
+	newBoss := db.Cache.Bosses[data.BossID-1]
+	treeArray := strings.Split(newBoss.Tree, "|")
+	index, isOnTree := common.SliceFind(treeArray, name)
+	// if user is not on tree
+	if !isOnTree {
+		return errors.New("you are not on tree now")
+	}
+	newTreeArray := append(treeArray[:index], treeArray[index+1:]...)
+	if len(newTreeArray) > 0 {
+		newBoss.Tree = strings.Join(newTreeArray, "|")
+	} else {
+		newBoss.Tree = " "
+	}
+
+	err = renewBoss(newBoss)
+	if err != nil {
+		return err
+	}
 	return errors.New("ok")
 }

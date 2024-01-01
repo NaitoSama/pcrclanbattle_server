@@ -53,3 +53,23 @@ type ImOut struct {
 type ImOutPayload struct {
 	ImOut `json:"im_out"`
 }
+
+// type:on_tree
+// OnTree stuck on boss
+type OnTree struct {
+	FromName string `json:"from_name"`
+	BossID   int    `json:"boss_id"`
+}
+type OnTreePayload struct {
+	OnTree `json:"on_tree"`
+}
+
+// type:down_tree
+// DownTree undo stuck on tree
+type DownTree struct {
+	FromName string `json:"from_name"`
+	BossID   int    `json:"boss_id"`
+}
+type DownTreePayload struct {
+	DownTree `json:"down_tree"`
+}
