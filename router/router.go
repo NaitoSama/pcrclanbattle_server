@@ -20,7 +20,7 @@ func router(r *gin.Engine) {
 		}
 		main.POST("login", server.Login)
 		main.POST("register", server.Register)
-		main.GET("userinfo", server.GetUserInfoFromJWT)
+		main.POST("userinfo", server.GetUserInfoFromJWT)
 		main.GET("test", func(context *gin.Context) {
 			context.String(200, "test")
 		})
