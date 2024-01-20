@@ -79,3 +79,27 @@ func Register(c *gin.Context) {
 	common.OKTokenSet(c, token)
 	c.JSON(http.StatusOK, gin.H{"result": "registered successfully"})
 }
+
+func GetUserInfoFromJWT(c *gin.Context) {
+	data := make(map[string]string)
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	jwt, ok := data["jwt"]
+	if !ok {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	userID, username, userAuthority, ok := common.ParseJWT(jwt)
+	if !ok {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"user_id":        userID,
+		"username":       username,
+		"user_authority": userAuthority,
+	})
+}
