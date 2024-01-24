@@ -100,7 +100,7 @@ func (client *Client) read() {
 			break
 		}
 		// handle the content from ws client
-		err = informationDiversion(message)
+		err = informationDiversion(client, message)
 		if err != nil {
 			feedback, _ := json.Marshal(gin.H{"result": err.Error()})
 			client.send <- []byte(feedback)
@@ -140,7 +140,7 @@ func WSInit() {
 	common.Logln(0, "websocket server started")
 }
 
-func informationDiversion(message []byte) error {
+func informationDiversion(client *Client, message []byte) error {
 	data := make(map[string]string)
 	json.Unmarshal(message, &data)
 	//if err != nil {
@@ -206,6 +206,11 @@ func informationDiversion(message []byte) error {
 			return err
 		}
 		break
+	case "getBoss":
+		lock.RLock()
+		bossInfo, _ := json.Marshal(db.Cache.Bosses)
+		lock.RUnlock()
+		client.send <- bossInfo
 	default:
 		return errors.New("unknown type")
 	}
