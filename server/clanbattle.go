@@ -170,6 +170,7 @@ func ReviseBoss(message []byte) error {
 		Value:   common.If(data.Value > bossNewDefaultValue, bossNewDefaultValue, data.Value).(int64),
 		WhoIsIn: " ",
 		Tree:    " ",
+		ValueD:  bossNewDefaultValue,
 	}
 	err = renewBoss(newBoss)
 	if err != nil {
