@@ -79,10 +79,10 @@ func (server *WebSocketServer) HandleConnection(context *gin.Context) {
 	server.register <- client
 
 	// send conn boss state data when it's first time
-	lock.RLock()
-	data, _ := json.Marshal(db.Cache.Bosses)
-	lock.RUnlock()
-	client.send <- data
+	//lock.RLock()
+	//data, _ := json.Marshal(db.Cache.Bosses)
+	//lock.RUnlock()
+	//client.send <- data
 
 	go client.write()
 	client.read()

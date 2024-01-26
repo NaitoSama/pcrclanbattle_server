@@ -61,6 +61,7 @@ func dbDataInit() {
 				Value:   config.Config.Boss.StageOne[i],
 				WhoIsIn: " ",
 				Tree:    " ",
+				ValueD:  config.Config.Boss.StageOne[i],
 			}
 			DB.Create(&boss)
 		}

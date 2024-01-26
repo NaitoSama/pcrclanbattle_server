@@ -116,6 +116,7 @@ func AttackBoss(message []byte, name string) error {
 	if data.AType == 1 {
 		newBoss.WhoIsIn = " "
 		newBoss.Tree = " "
+		newBoss.ValueD = bossNewValue
 	} else if name == newBoss.WhoIsIn {
 		newBoss.WhoIsIn = " "
 	}
@@ -138,6 +139,8 @@ func AttackBoss(message []byte, name string) error {
 		BeforeBossValue:   beforeAttackBoss.Value,
 		BeforeBossWhoIsIn: beforeAttackBoss.WhoIsIn,
 		BeforeBossTree:    beforeAttackBoss.Tree,
+		BeforeBossValueD:  beforeAttackBoss.ValueD,
+		CanUndo:           1,
 	}
 	result := db.DB.Model(db.Record{}).Create(&record)
 	if result.Error != nil {
@@ -191,7 +194,9 @@ func Undo(message []byte, name string) error {
 	for i := recordsLen - 1; i >= 0; i-- {
 		round--
 		if data.BossID == db.Cache.Records[i].AttackTo {
-			if name == db.Cache.Records[i].AttackFrom {
+			if name == db.Cache.Records[i].AttackFrom && db.Cache.Records[i].CanUndo == 1 {
+				db.Cache.Records[i].CanUndo = 0
+				db.DB.Model(db.Record{}).Where("id = ?", db.Cache.Records[i].ID).Update("can_undo", 0)
 				bossStatus = db.Boss{
 					ID:      db.Cache.Records[i].AttackTo,
 					Stage:   db.Cache.Records[i].BeforeBossStage,
@@ -199,6 +204,7 @@ func Undo(message []byte, name string) error {
 					Value:   db.Cache.Records[i].BeforeBossValue,
 					WhoIsIn: db.Cache.Records[i].BeforeBossWhoIsIn,
 					Tree:    db.Cache.Records[i].BeforeBossTree,
+					ValueD:  db.Cache.Records[i].BeforeBossValueD,
 				}
 				bossStatusDataIndex = i
 				findBossStatus = true

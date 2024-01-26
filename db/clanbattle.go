@@ -11,6 +11,7 @@ type Record struct {
 	BeforeBossStage   int
 	BeforeBossRound   int
 	BeforeBossValue   int64
+	BeforeBossValueD  int64
 	BeforeBossWhoIsIn string
 	BeforeBossTree    string
 }
@@ -22,6 +23,7 @@ type Boss struct {
 	Value   int64
 	WhoIsIn string
 	Tree    string
+	ValueD  int64
 }
 
 type User struct {
