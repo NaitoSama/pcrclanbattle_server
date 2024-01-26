@@ -148,6 +148,8 @@ func AttackBoss(message []byte, name string) error {
 	}
 	// renew cache
 	db.Cache.Records = append(db.Cache.Records, record)
+	broadcastData, _ := json.Marshal(record)
+	Server.broadcast <- broadcastData
 	return errors.New("ok")
 }
 

@@ -211,6 +211,11 @@ func informationDiversion(client *Client, message []byte) error {
 		bossInfo, _ := json.Marshal(db.Cache.Bosses)
 		lock.RUnlock()
 		client.send <- bossInfo
+	case "getRecord":
+		lock.RLock()
+		record, _ := json.Marshal(db.Cache.Records)
+		lock.RUnlock()
+		client.send <- record
 	default:
 		return errors.New("unknown type")
 	}
