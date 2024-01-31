@@ -43,14 +43,10 @@ func (server *WebSocketServer) run() {
 	for {
 		select {
 		case client := <-server.register: // a new conn
-			lock.Lock()
 			server.clients[client] = true
-			lock.Unlock()
 		case client := <-server.unregister: // a conn closed
 			if _, ok := server.clients[client]; ok {
-				lock.Lock()
 				delete(server.clients, client)
-				lock.Unlock()
 				close(client.send)
 			}
 		case message := <-server.broadcast: // a broadcast event occurred
@@ -59,9 +55,7 @@ func (server *WebSocketServer) run() {
 				case client.send <- message:
 				default:
 					close(client.send)
-					lock.Lock()
 					delete(server.clients, client)
-					lock.Unlock()
 				}
 			}
 		}
@@ -207,14 +201,10 @@ func informationDiversion(client *Client, message []byte) error {
 		}
 		break
 	case "getBoss":
-		lock.RLock()
 		bossInfo, _ := json.Marshal(db.Cache.Bosses)
-		lock.RUnlock()
 		client.send <- bossInfo
 	case "getRecord":
-		lock.RLock()
 		record, _ := json.Marshal(db.Cache.Records)
-		lock.RUnlock()
 		client.send <- record
 	default:
 		return errors.New("unknown type")
