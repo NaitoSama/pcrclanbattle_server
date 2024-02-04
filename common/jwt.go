@@ -45,9 +45,9 @@ func JWTAuthentication(c *gin.Context) {
 	}
 	userIDStr := fmt.Sprint(userID)
 	userAuthorityStr := fmt.Sprint(userAuthority)
-	c.AddParam("username", username)
-	c.AddParam("user_id", userIDStr)
-	c.AddParam("user_authority", userAuthorityStr)
+	c.Set("username", username)
+	c.Set("user_id", userIDStr)
+	c.Set("user_authority", userAuthorityStr)
 }
 
 type MyClaims struct {

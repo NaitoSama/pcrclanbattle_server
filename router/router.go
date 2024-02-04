@@ -9,6 +9,7 @@ import (
 
 // router Add the request method and path here
 func router(r *gin.Engine) {
+	r.Static("/pic", "./pic")
 	main := r.Group("/")
 	main.Use(common.RandTokenSet)
 	{
@@ -16,7 +17,8 @@ func router(r *gin.Engine) {
 		v1.Use(common.JWTAuthentication)
 		{
 			v1.GET("/ws", server.Server.HandleConnection)
-			v1.GET("records", server.GetRecords)
+			v1.GET("/records", server.GetRecords)
+			v1.POST("/uploadbosspic", server.UploadBossPic)
 		}
 		main.POST("login", server.Login)
 		main.POST("register", server.Register)
