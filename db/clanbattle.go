@@ -24,6 +24,7 @@ type Boss struct {
 	WhoIsIn string
 	Tree    string
 	ValueD  int64
+	PicETag string
 }
 
 type User struct {

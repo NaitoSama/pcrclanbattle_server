@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 	"pcrclanbattle_server/common"
@@ -54,6 +55,10 @@ func dbDataInit() {
 	result = DB.Model(boss).Where("id = ?", 3).First(&boss)
 	if result.RowsAffected == 0 {
 		for i := 0; i < 5; i++ {
+			picETag, err := common.CalculateETag(fmt.Sprintf("./pic/%d.jpg", i+1))
+			if err != nil {
+				common.Logln(2, err)
+			}
 			boss = Boss{
 				ID:      i + 1,
 				Stage:   1,
@@ -62,6 +67,7 @@ func dbDataInit() {
 				WhoIsIn: " ",
 				Tree:    " ",
 				ValueD:  config.Config.Boss.StageOne[i],
+				PicETag: picETag,
 			}
 			DB.Create(&boss)
 		}

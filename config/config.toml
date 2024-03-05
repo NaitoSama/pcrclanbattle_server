@@ -4,7 +4,7 @@ RegisterCode = "peko"
 
 [DB]
 AdminName = "admin"
-AdminPasswd = "admin"
+AdminPasswd = "111111"
 
 [Boss]
 StageOne = [1,2,3,4,5]
