@@ -1,6 +1,9 @@
 [General]
 HttpPort = "8081"
 RegisterCode = "peko"
+UseTLS = false
+CRT = "./server.crt"
+KEY = "./server.key"
 
 [DB]
 AdminName = "admin"

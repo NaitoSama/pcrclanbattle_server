@@ -26,6 +26,9 @@ type config struct {
 type general struct {
 	HttpPort     string
 	RegisterCode string
+	UseTLS       bool
+	CRT          string
+	KEY          string
 }
 
 type db struct {
