@@ -171,6 +171,7 @@ func ReviseBoss(message []byte) error {
 		WhoIsIn: " ",
 		Tree:    " ",
 		ValueD:  bossNewDefaultValue,
+		PicETag: db.Cache.Bosses[data.BossID-1].PicETag,
 	}
 	err = renewBoss(newBoss)
 	if err != nil {
