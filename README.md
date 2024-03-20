@@ -13,7 +13,7 @@
 
 #### 部署
 
-下载正确的可执行文件，需要在文件的同目录下有config，log，db三个目录文件。config下需要有config.toml文件。
+下载正确的可执行文件，需要在文件的同目录下有config，log，db，pic四个目录文件。config下需要有config.toml文件。
 
 需要结合[客户端](https://github.com/NaitoSama/pcrcli)使用。
 
