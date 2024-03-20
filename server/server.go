@@ -11,13 +11,22 @@ func ServerInit() {}
 func GetRecords(c *gin.Context) {
 	lock.RLock()
 	defer lock.RUnlock()
-	records := db.Cache.Records
-	c.JSON(http.StatusOK, records)
+	c.JSON(http.StatusOK, db.Cache.Records)
 }
 
 func GetBosses(c *gin.Context) {
 	lock.RLock()
 	defer lock.RUnlock()
-	bosses := db.Cache.Bosses
-	c.JSON(http.StatusOK, bosses)
+	c.JSON(http.StatusOK, db.Cache.Bosses)
+}
+
+func GetUsers(c *gin.Context) {
+	lock.RLock()
+	defer lock.RUnlock()
+	var users []db.User
+	reqUsers := c.QueryArray("users")
+	for i := 0; i < len(reqUsers); i++ {
+		users = append(users, *db.Cache.Users[reqUsers[i]])
+	}
+	c.JSON(http.StatusOK, users)
 }

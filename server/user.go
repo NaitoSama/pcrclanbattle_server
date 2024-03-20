@@ -23,12 +23,14 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"result": "Invalid JSON structure"})
 		return
 	}
+
 	user := db.User{}
 	result := db.DB.Model(db.User{}).Where("name = ? and password = ?", username, common.PasswordEncryption(password)).First(&user)
 	if result.RowsAffected == 0 || result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"result": "wrong name or password"})
 		return
 	}
+
 	token, _ := common.NewJWT(user.UserID, user.Name, user.Permission)
 	common.OKTokenSet(c, token)
 	c.JSON(http.StatusOK, gin.H{"result": user.Name + ",你好"})
@@ -75,6 +77,9 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"result": "registration failed"})
 		return
 	}
+	lock.Lock()
+	defer lock.Unlock()
+	db.Cache.Users[user.Name] = &user
 	token, _ := common.NewJWT(0, user.Name, 0)
 	common.OKTokenSet(c, token)
 	c.JSON(http.StatusOK, gin.H{"result": "registered successfully"})

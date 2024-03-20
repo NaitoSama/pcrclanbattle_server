@@ -13,9 +13,12 @@ var DB *gorm.DB
 type cache struct {
 	Bosses  []Boss
 	Records []Record
+	Users   map[string]*User
 }
 
-var Cache = &cache{}
+var Cache = &cache{
+	Users: make(map[string]*User),
+}
 
 func DBInit() {
 	db, err := gorm.Open(sqlite.Open("./db/clanbattle.db"), &gorm.Config{})
@@ -79,4 +82,10 @@ func dbCacheInit() {
 	DB.Model(Boss{}).Find(&Cache.Bosses)
 	// record cache init
 	DB.Model(Record{}).Find(&Cache.Records)
+	// user cache init
+	var users []User
+	DB.Model(User{}).Find(&users)
+	for i := 0; i < len(users); i++ {
+		Cache.Users[users[i].Name] = &users[i]
+	}
 }

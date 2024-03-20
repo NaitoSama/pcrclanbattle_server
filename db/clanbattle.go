@@ -33,4 +33,8 @@ type User struct {
 	Name       string
 	Password   string
 	Permission int
+	UserPic    string
+	PicETag    string
+	UserPic16  string
+	Pic16ETag  string
 }

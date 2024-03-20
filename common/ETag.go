@@ -24,3 +24,16 @@ func CalculateETag(filename string) (string, error) {
 
 	return etag, nil
 }
+
+func CalculateETagForBytes(file []byte) (string, error) {
+
+	// 计算文件内容的 SHA-1 哈希值
+	hash := sha1.New()
+	hash.Write(file)
+	sha1Hash := hash.Sum(nil)
+
+	// 将哈希值转换为十六进制字符串
+	etag := hex.EncodeToString(sha1Hash)
+
+	return etag, nil
+}
