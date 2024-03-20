@@ -108,3 +108,41 @@ func GetUserInfoFromJWT(c *gin.Context) {
 		"user_authority": userAuthority,
 	})
 }
+
+func ChangePassword(c *gin.Context) {
+	json := make(map[string]string)
+	err := c.ShouldBindJSON(&json)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"result": "must be string"})
+		return
+	}
+	username, usernameExists := json["username"]
+	oldPassword, passwordExists := json["old_password"]
+	newPassword, newPasswordExists := json["new_password"]
+	if !usernameExists || !passwordExists || !newPasswordExists {
+		c.JSON(http.StatusBadRequest, gin.H{"result": "Invalid JSON structure"})
+		return
+	}
+	if oldPassword == newPassword {
+		c.JSON(http.StatusBadRequest, gin.H{"result": "new password cannot be the same as the old one"})
+		return
+	}
+
+	user, ok := db.Cache.Users[username]
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"result": "user dose not exist"})
+		return
+	}
+	newUser := *user
+	if newUser.Password != common.PasswordEncryption(oldPassword) {
+		c.JSON(http.StatusBadRequest, gin.H{"result": "wrong old password"})
+		return
+	}
+	newUser.Password = common.PasswordEncryption(newPassword)
+	err = renewUser(&newUser)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"result": "can not update new password"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"result": "change password successfully"})
+}

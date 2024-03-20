@@ -25,6 +25,7 @@ func router(r *gin.Engine) {
 		}
 		main.POST("login", server.Login)
 		main.POST("register", server.Register)
+		main.POST("changepassword", server.ChangePassword)
 		main.POST("userinfo", server.GetUserInfoFromJWT)
 		main.GET("test", func(context *gin.Context) {
 			context.String(200, "test")

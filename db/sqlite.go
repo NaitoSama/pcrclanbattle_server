@@ -43,7 +43,7 @@ func dbDataInit() {
 	username := config.Config.DB.AdminName
 	password := common.PasswordEncryption(config.Config.DB.AdminPasswd)
 	user := User{}
-	result := DB.Model(user).Where("name = ? and password = ?", username, password).First(&user)
+	result := DB.Model(user).Where("name = ?", username).First(&user)
 	if result.RowsAffected == 0 {
 		user = User{
 			Name:       username,
