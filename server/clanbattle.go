@@ -209,6 +209,7 @@ func Undo(message []byte, name string) error {
 					WhoIsIn: db.Cache.Records[i].BeforeBossWhoIsIn,
 					Tree:    db.Cache.Records[i].BeforeBossTree,
 					ValueD:  db.Cache.Records[i].BeforeBossValueD,
+					PicETag: db.Cache.Bosses[db.Cache.Records[i].AttackTo-1].PicETag,
 				}
 				bossStatusDataIndex = i
 				findBossStatus = true
