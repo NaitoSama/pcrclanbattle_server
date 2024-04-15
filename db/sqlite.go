@@ -1,11 +1,13 @@
 package db
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 	"pcrclanbattle_server/common"
 	"pcrclanbattle_server/config"
+	"time"
 )
 
 var DB *gorm.DB
@@ -88,4 +90,30 @@ func dbCacheInit() {
 	for i := 0; i < len(users); i++ {
 		Cache.Users[users[i].Name] = &users[i]
 	}
+}
+
+func testRecord() {
+	timeNow := time.Now()
+	record := Record{
+		Model: gorm.Model{
+			CreatedAt: timeNow,
+			UpdatedAt: timeNow,
+			DeletedAt: gorm.DeletedAt(sql.NullTime{
+				Time:  timeNow.AddDate(0, 0, 1),
+				Valid: true,
+			}),
+		},
+		AttackFrom:        "test",
+		AttackTo:          1,
+		Damage:            1,
+		BeforeBossStage:   1,
+		BeforeBossRound:   1,
+		BeforeBossValue:   1,
+		BeforeBossWhoIsIn: "test",
+		BeforeBossTree:    "test",
+		BeforeBossValueD:  1,
+		CanUndo:           1,
+		ArchiveID:         "",
+	}
+	_ = DB.Model(Record{}).Create(&record)
 }

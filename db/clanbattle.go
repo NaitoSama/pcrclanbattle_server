@@ -14,6 +14,7 @@ type Record struct {
 	BeforeBossValueD  int64
 	BeforeBossWhoIsIn string
 	BeforeBossTree    string
+	ArchiveID         string
 }
 
 type Boss struct {

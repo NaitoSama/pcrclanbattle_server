@@ -22,6 +22,7 @@ func router(r *gin.Engine) {
 			v1.GET("/users", server.GetUsers)
 			v1.POST("/uploadbosspic", server.UploadBossPic)
 			v1.POST("/uploaduserpic", server.UploadUserPic)
+			v1.GET("/archiverecords", server.RecordsArchiving)
 		}
 		main.POST("login", server.Login)
 		main.POST("register", server.Register)

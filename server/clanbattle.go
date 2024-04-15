@@ -141,6 +141,7 @@ func AttackBoss(message []byte, name string) error {
 		BeforeBossTree:    beforeAttackBoss.Tree,
 		BeforeBossValueD:  beforeAttackBoss.ValueD,
 		CanUndo:           1,
+		ArchiveID:         "",
 	}
 	result := db.DB.Model(db.Record{}).Create(&record)
 	if result.Error != nil {
