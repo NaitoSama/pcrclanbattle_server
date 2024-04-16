@@ -24,6 +24,7 @@ func router(r *gin.Engine) {
 			v1.POST("/uploaduserpic", server.UploadUserPic)
 			v1.GET("/archiverecords", server.RecordsArchiving)
 			v1.GET("/deleterecord", server.DeleteRecords)
+			v1.GET("/updateuserauthority", server.UpdateUserAuthority)
 		}
 		main.POST("login", server.Login)
 		main.POST("register", server.Register)

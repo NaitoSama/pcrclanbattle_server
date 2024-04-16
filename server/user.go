@@ -146,3 +146,28 @@ func ChangePassword(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"result": "change password successfully"})
 }
+
+func UpdateUserAuthority(c *gin.Context) {
+	authority, _ := c.Get("user_authority")
+	if authority != "2" {
+		c.JSON(http.StatusForbidden, gin.H{
+			"result": "insufficient permissions",
+		})
+		return
+	}
+	userName := c.Query("username")
+	if userName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": "must have username and authority",
+		})
+		return
+	}
+	user := db.Cache.Users[userName]
+	db.DB.Model(user).Updates(db.User{Permission: 1})
+	lock.Lock()
+	defer lock.Unlock()
+	db.Cache.Users[userName].Permission = 1
+	c.JSON(http.StatusOK, gin.H{
+		"result": "ok",
+	})
+}
