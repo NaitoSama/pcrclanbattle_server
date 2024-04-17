@@ -9,6 +9,21 @@ import (
 func ServerInit() {}
 
 func GetRecords(c *gin.Context) {
+	isAll := c.Query("all")
+	if isAll == "" {
+		GetUnarchivedRecords(c)
+	} else {
+		GetAllRecords(c)
+	}
+}
+
+func GetAllRecords(c *gin.Context) {
+	lock.RLock()
+	defer lock.RUnlock()
+	c.JSON(http.StatusOK, db.Cache.Records)
+}
+
+func GetUnarchivedRecords(c *gin.Context) {
 	var tempList []db.Record
 	lock.RLock()
 	defer lock.RUnlock()
