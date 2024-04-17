@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"pcrclanbattle_server/config"
@@ -75,6 +76,7 @@ func DeleteRecords(c *gin.Context) {
 	for i := 0; i < length; i++ {
 		j := length - 1 - i
 		if uint64(db.Cache.Records[j].ID) == recordID {
+			toDeleteRecord := db.Cache.Records[j]
 			var temp []db.Record
 			if j != length-1 {
 				temp = append(db.Cache.Records[:j], db.Cache.Records[j+1:]...)
@@ -82,6 +84,10 @@ func DeleteRecords(c *gin.Context) {
 				temp = db.Cache.Records[:j]
 			}
 			db.Cache.Records = temp
+			content := db.Content{Type: "record_delete", Data: toDeleteRecord}
+			// broadcast
+			broadcastData, _ := json.Marshal(content)
+			Server.broadcast <- broadcastData
 			break
 		}
 	}

@@ -163,7 +163,13 @@ func UpdateUserAuthority(c *gin.Context) {
 		return
 	}
 	user := db.Cache.Users[userName]
-	db.DB.Model(user).Updates(db.User{Permission: 1})
+	result := db.DB.Model(user).Updates(db.User{Permission: 1})
+	if result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": "invalid username",
+		})
+		return
+	}
 	lock.Lock()
 	defer lock.Unlock()
 	db.Cache.Users[userName].Permission = 1
