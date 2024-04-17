@@ -203,9 +203,14 @@ func informationDiversion(client *Client, message []byte) error {
 	case "getBoss":
 		bossInfo, _ := json.Marshal(db.Cache.Bosses)
 		client.send <- bossInfo
+		break
 	case "getRecord":
 		record, _ := json.Marshal(db.Cache.Records)
 		client.send <- record
+		break
+	case "heartbeat":
+		client.send <- message
+		break
 	default:
 		return errors.New("unknown type")
 	}

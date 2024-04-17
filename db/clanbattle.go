@@ -2,6 +2,11 @@ package db
 
 import "gorm.io/gorm"
 
+type Content struct {
+	Type string `json:"type"`
+	Data interface{}
+}
+
 type Record struct {
 	gorm.Model
 	AttackFrom        string

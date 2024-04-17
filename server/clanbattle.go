@@ -41,8 +41,9 @@ func renewBoss(renewBoss db.Boss) error {
 
 	// renew cache
 	db.Cache.Bosses[renewBoss.ID-1] = renewBoss
+	content := db.Content{Type: "boss_update", Data: renewBoss}
 	// broadcast
-	broadcastData, _ := json.Marshal(renewBoss)
+	broadcastData, _ := json.Marshal(content)
 	Server.broadcast <- broadcastData
 	return nil
 }
@@ -149,7 +150,8 @@ func AttackBoss(message []byte, name string) error {
 	}
 	// renew cache
 	db.Cache.Records = append(db.Cache.Records, record)
-	broadcastData, _ := json.Marshal(record)
+	content := db.Content{Type: "record_append", Data: record}
+	broadcastData, _ := json.Marshal(content)
 	Server.broadcast <- broadcastData
 	return errors.New("ok")
 }
@@ -231,8 +233,17 @@ func Undo(message []byte, name string) error {
 	if err != nil {
 		return err
 	}
+	// send delete record command to client
+	content := db.Content{Type: "record_delete", Data: db.Cache.Records[bossStatusDataIndex]}
+	broadcastData, _ := json.Marshal(content)
+	Server.broadcast <- broadcastData
 	// renew cache
-	db.Cache.Records = append(db.Cache.Records[:bossStatusDataIndex], db.Cache.Records[bossStatusDataIndex+1:]...)
+	if bossStatusDataIndex == len(db.Cache.Records)-1 {
+		db.Cache.Records = append(db.Cache.Records[:bossStatusDataIndex])
+	} else {
+		db.Cache.Records = append(db.Cache.Records[:bossStatusDataIndex], db.Cache.Records[bossStatusDataIndex+1:]...)
+	}
+
 	return errors.New("ok")
 }
 
