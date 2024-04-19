@@ -209,6 +209,7 @@ func informationDiversion(client *Client, message []byte) error {
 		client.send <- record
 		break
 	case "heartbeat":
+		//println("received heartbeat")
 		client.send <- message
 		break
 	default:

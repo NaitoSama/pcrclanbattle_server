@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"pcrclanbattle_server/common"
@@ -173,6 +174,11 @@ func UpdateUserAuthority(c *gin.Context) {
 	lock.Lock()
 	defer lock.Unlock()
 	db.Cache.Users[userName].Permission = 1
+
+	content := db.Content{Type: "promotion_user", Data: userName}
+	// broadcast
+	broadcastData, _ := json.Marshal(content)
+	Server.broadcast <- broadcastData
 	c.JSON(http.StatusOK, gin.H{
 		"result": "ok",
 	})
